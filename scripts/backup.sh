@@ -46,7 +46,7 @@ gcloud auth activate-service-account --key-file google_service_account.json
 rm google_service_account.json
 
 if [ $? -ne 0 ] ; then
-    log "Credentials failed; no way to copy to google."
+    log "GCS Credential is invalid."
 fi
 echo ""
 log "Dumping database named $PGDATABASE from $PGHOST"
