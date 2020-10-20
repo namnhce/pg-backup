@@ -1,0 +1,29 @@
+# Golang CircleCI 2.0 configuration file
+version: 2
+jobs:
+  build:
+    docker:
+      - image: google/cloud-sdk
+    working_directory: ~/pg-backup
+    environment:
+      GCR_HOST: asia.gcr.io
+      SERVICE_NAME: pg-backup
+    steps:
+      - checkout
+      - setup_remote_docker
+
+      - run: docker login -u $USERNAME -p $PASSWORD
+
+      - run: docker build -t $SERVICE_NAME:latest .
+      - run: docker tag $SERVICE_NAME:latest $USERNAME/$SERVICE_NAME:latest
+      - run: docker push  $USERNAME/$SERVICE_NAME:latest
+
+workflows:
+  version: 2
+  update-image:
+    jobs:
+      - build:
+          filters:
+            branches:
+              only:
+                - master
